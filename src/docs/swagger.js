@@ -1,7 +1,5 @@
 const swaggerJsdoc = require("swagger-jsdoc");
 
-const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
-
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -10,7 +8,7 @@ const options = {
       version: "1.0.0",
       description: "API for managing e-commerce products",
     },
-    servers: [{ url: BASE_URL }], 
+    servers: [{ url: "http://localhost:3000" }],
   },
   apis: ["./src/routes/*.js"],
 };
