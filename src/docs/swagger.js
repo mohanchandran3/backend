@@ -8,7 +8,11 @@ const options = {
       version: "1.0.0",
       description: "API for managing e-commerce products",
     },
-    servers: [{ url: process.env.BASE_URL || "http://localhost:3000" }],
+    servers: [
+      {
+        url: process.env.BASE_URL || `https://${process.env.VERCEL_URL}`,
+      },
+    ],
   },
   apis: ["./src/routes/*.js"],
 };
