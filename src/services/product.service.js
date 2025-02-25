@@ -3,22 +3,25 @@ const supabase = require("../configs/supabaseClient");
 const getAllProducts = async (query) => {
     const { search, category, brand, minPrice, maxPrice, page = 1, limit = 10 } = query;
     const offset = (page - 1) * limit;
-
     let queryBuilder = supabase.from("products").select("*");
-
-    if (search) queryBuilder = queryBuilder.ilike("title", `%${search}%`);
+    if (search) {
+        queryBuilder = queryBuilder.or(
+            `title.ilike.%${search}%,description.ilike.%${search}%,category.ilike.%${search}%,brand.ilike.%${search}%`
+        );
+    }
     if (category) queryBuilder = queryBuilder.eq("category", category);
     if (brand) queryBuilder = queryBuilder.eq("brand", brand);
     if (minPrice) queryBuilder = queryBuilder.gte("price", minPrice);
     if (maxPrice) queryBuilder = queryBuilder.lte("price", maxPrice);
 
-    queryBuilder.range(offset, offset + limit - 1);
+    queryBuilder = queryBuilder.range(offset, offset + limit - 1);
 
     const { data, error } = await queryBuilder;
     if (error) throw new Error(error.message);
 
     return data;
 };
+
 
 const getProductById = async (id) => {
     const { data, error } = await supabase.from("products").select("*").eq("id", id).single();
